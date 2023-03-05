@@ -1,60 +1,57 @@
 import tkinter as tk
 
-def add():
-    num1 = float(entry1.get())
-    num2 = float(entry2.get())
-    result = num1 + num2
-    label_result.config(text="Result: " + str(result))
+class Calculator(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Simple Calculator")
 
-def subtract():
-    num1 = float(entry1.get())
-    num2 = float(entry2.get())
-    result = num1 - num2
-    label_result.config(text="Result: " + str(result))
+        # Creating the input field
+        self.input_field = tk.Entry(self, width=40, borderwidth=5)
+        self.input_field.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
 
-def multiply():
-    num1 = float(entry1.get())
-    num2 = float(entry2.get())
-    result = num1 * num2
-    label_result.config(text="Result: " + str(result))
+        # Creating buttons for the calculator
+        self.create_button("1", 1, 0)
+        self.create_button("2", 1, 1)
+        self.create_button("3", 1, 2)
+        self.create_button("4", 2, 0)
+        self.create_button("5", 2, 1)
+        self.create_button("6", 2, 2)
+        self.create_button("7", 3, 0)
+        self.create_button("8", 3, 1)
+        self.create_button("9", 3, 2)
+        self.create_button("0", 4, 1)
+        self.create_button(".", 4, 2)
 
-def divide():
-    num1 = float(entry1.get())
-    num2 = float(entry2.get())
-    if num2 != 0:
-        result = num1 / num2
-        label_result.config(text="Result: " + str(result))
-    else:
-        label_result.config(text="Error: division by zero")
+        # Creating operation buttons
+        self.create_button("+", 1, 3)
+        self.create_button("-", 2, 3)
+        self.create_button("*", 3, 3)
+        self.create_button("/", 4, 3)
 
-root = tk.Tk()
-root.title("Simple Calculator")
+        self.create_button("Clear", 5, 0)
+        self.create_button("=", 5, 1, columnspan=2)
 
-label1 = tk.Label(root, text="Enter first number:")
-label1.pack()
+    def create_button(self, text, row, column, columnspan=1):
+        button = tk.Button(self, text=text, padx=40, pady=20, command=lambda: self.button_click(text))
+        button.grid(row=row, column=column, columnspan=columnspan)
 
-entry1 = tk.Entry(root)
-entry1.pack()
+    def button_click(self, text):
+        if text == "Clear":
+            self.input_field.delete(0, tk.END)
+        elif text == "=":
+            self.calculate()
+        else:
+            self.input_field.insert(tk.END, text)
 
-label2 = tk.Label(root, text="Enter second number:")
-label2.pack()
+    def calculate(self):
+        input_string = self.input_field.get()
+        try:
+            result = eval(input_string)
+            self.input_field.delete(0, tk.END)
+            self.input_field.insert(0, result)
+        except:
+            self.input_field.delete(0, tk.END)
+            self.input_field.insert(0, "Error")
 
-entry2 = tk.Entry(root)
-entry2.pack()
-
-add_button = tk.Button(root, text="Add", command=add)
-add_button.pack()
-
-subtract_button = tk.Button(root, text="Subtract", command=subtract)
-subtract_button.pack()
-
-multiply_button = tk.Button(root, text="Multiply", command=multiply)
-multiply_button.pack()
-
-divide_button = tk.Button(root, text="Divide", command=divide)
-divide_button.pack()
-
-label_result = tk.Label(root, text="")
-label_result.pack()
-
-root.mainloop()
+calculator = Calculator()
+calculator.mainloop()
